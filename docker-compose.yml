@@ -1,12 +1,10 @@
-version: "3.9"
-
 services:
   app:
     build: .
     ports:
       - "8000:8000"
     volumes:
-      - ./app:/app
+      - ./app:/app  # ✅ Avoids Windows absolute path issue
     depends_on:
       - db
     environment:
@@ -25,10 +23,11 @@ services:
 
   prometheus:
     image: prom/prometheus
-    volumes:
-      - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
     ports:
       - "9090:9090"
+    volumes:
+      - ${PWD}/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+
 
   grafana:
     image: grafana/grafana
